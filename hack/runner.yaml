@@ -1,0 +1,20 @@
+---
+apiVersion: my.domain/v1alpha1
+kind: Runner
+metadata:
+  labels:
+    app.kubernetes.io/name: runner
+    app.kubernetes.io/instance: runner-sample
+    app.kubernetes.io/part-of: gitlab-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: gitlab-operator
+  name: runner-sample
+  namespace: default
+spec:
+  runnerOptions:
+    runnerType: "project_type"
+    projectID: 0
+    description: "Runner created from crd operator"
+    tagList:
+      - "linux"
+      - "sometag"

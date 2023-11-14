@@ -1,0 +1,12 @@
+apiVersion: my.domain/v1alpha1
+kind: Runner
+metadata:
+  labels:
+    app.kubernetes.io/name: runner
+    app.kubernetes.io/instance: runner-sample
+    app.kubernetes.io/part-of: gitlab-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: gitlab-operator
+  name: runner-sample
+spec:
+  # TODO(user): Add fields here
