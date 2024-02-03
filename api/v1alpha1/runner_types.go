@@ -57,6 +57,8 @@ type RunnerStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Created at",type=string,JSONPath=`.metadata.creationTimestamp`,description="Creation timestamp"
+// +kubebuilder:printcolumn:name="Age",type=date,JSONPath=`.metadata.creationTimestamp`,description="Runner age"
 // +kubebuilder:printcolumn:name="Status",type=string,JSONPath=`.status.conditions[-1].type`,description="status represesnts current runner state eg. Alive, Destroing, Provisioning"
 // Runner is the Schema for the runners API
 type Runner struct {

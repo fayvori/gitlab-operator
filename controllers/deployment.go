@@ -40,7 +40,7 @@ func (r *RunnerReconciler) defineDeployment(runnerObj *v1alpha1.Runner) *appsv1.
 								"run",
 							},
 							Name:            runnerObj.Name,
-							Image:           "gitlab/gitlab-runner:latest",
+							Image:           "gitlab/gitlab-runner:alpine3.19-bleeding",
 							ImagePullPolicy: apiv1.PullAlways,
 							VolumeMounts: []apiv1.VolumeMount{
 								apiv1.VolumeMount{

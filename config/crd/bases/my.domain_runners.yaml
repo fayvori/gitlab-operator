@@ -16,6 +16,14 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - description: Creation timestamp
+      jsonPath: .metadata.creationTimestamp
+      name: Created at
+      type: string
+    - description: Runner age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     - description: status represesnts current runner state eg. Alive, Destroing, Provisioning
       jsonPath: .status.conditions[-1].type
       name: Status

@@ -138,6 +138,7 @@ func (gc *ConfigGenerator) Generate(runnerObj *v1alpha1.Runner, runnerID int, to
 				},
 				// TODO
 				Kubernetes: Kubernetes{
+					// TODO
 					Host:                                    "replace",
 					BearerTokenOverwriteAllowed:             false,
 					Image:                                   "alpine",

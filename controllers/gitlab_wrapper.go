@@ -82,26 +82,26 @@ func (r *RunnerReconciler) RegisterNewUserRunner(ctx context.Context, runnerObj 
 		return nil, err
 	}
 
-	// TODO Enable runner for projects
-	// for index, enableForProject := range runnerObj.Spec.EnableFor {
-	// 	projectID, err := client.GetProjectIDByPathWithNamespace(enableForProject)
+	// TODO Enable runner for multiple projects
+	for _, enableForProject := range runnerObj.Spec.EnableFor {
+		_, err := client.GetProjectIDByPathWithNamespace(enableForProject)
 
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
+		if err != nil {
+			return nil, err
+		}
 
-	// 	if len(runnerObj.Spec.EnableFor) > 1 {
-	// 		if index > 1 {
-	// 			_, err = client.EnableProjectRunner(projectID, &gitlab.EnableProjectRunnerOptions{
-	// 				RunnerID: userRunner.ID,
-	// 			})
+		// if len(runnerObj.Spec.EnableFor) > 1 {
+		// 	if projectID != *runnerObj.Spec.RunnerOptions.ProjectID {
+		// 		_, err = client.EnableProjectRunner(projectID, &gitlab.EnableProjectRunnerOptions{
+		// 			RunnerID: userRunner.ID,
+		// 		})
 
-	// 			if err != nil {
-	// 				return nil, err
-	// 			}
-	// 		}
-	// 	}
-	// }
+		// 		if err != nil {
+		// 			return nil, err
+		// 		}
+		// 	}
+		// }
+	}
 
 	return userRunner, nil
 }

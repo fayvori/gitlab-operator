@@ -3,7 +3,6 @@ package gitlabapi
 import (
 	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/xanzy/go-gitlab"
 	"k8s.io/utils/pointer"
@@ -18,7 +17,7 @@ var (
 type GitlabClient interface {
 	RegisterNewUserRunner(opt *gitlab.CreateUserRunnerOptions) (*gitlab.UserRunner, *gitlab.Response, error)
 	DeleteRunnerById(rid int) (*gitlab.Response, error)
-	GetProjectIDByPathWithNamespace(projectPath string) (string, error)
+	GetProjectIDByPathWithNamespace(projectPath string) (int, error)
 
 	EnableProjectRunner(pid interface{}, opt *gitlab.EnableProjectRunnerOptions) (*gitlab.Runner, error)
 	DisableProjectRunner(pid interface{}, runnerId int) (*gitlab.Response, error)
@@ -32,6 +31,15 @@ func (g *gitlabApi) RegisterNewUserRunner(opt *gitlab.CreateUserRunnerOptions) (
 	runner, _, err := g.client.Users.CreateUserRunner(opt)
 
 	if err != nil {
+		return nil, nil, err
+	}
+
+	// Check if runner successfully registered
+	opts := &gitlab.VerifyRegisteredRunnerOptions{
+		Token: &runner.Token,
+	}
+
+	if response, err := g.client.Runners.VerifyRegisteredRunner(opts); err != nil || response.StatusCode != http.StatusOK {
 		return nil, nil, err
 	}
 
@@ -62,23 +70,21 @@ func (g *gitlabApi) DeleteRunnerById(rid int) (*gitlab.Response, error) {
 }
 
 // TODO
-func (g *gitlabApi) GetProjectIDByPathWithNamespace(projectPath string) (string, error) {
+func (g *gitlabApi) GetProjectIDByPathWithNamespace(projectPath string) (int, error) {
 	projects, _, err := g.client.Projects.ListUserProjects(11901232, &gitlab.ListProjectsOptions{
 		Search:           pointer.String(projectPath),
 		SearchNamespaces: pointer.Bool(true),
 	})
 
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	for _, project := range projects {
-		projectID := strconv.Itoa(project.ID)
-
-		return projectID, nil
+		return project.ID, nil
 	}
 
-	return "", nil
+	return 0, nil
 }
 
 func (g *gitlabApi) EnableProjectRunner(pid interface{}, opt *gitlab.EnableProjectRunnerOptions) (*gitlab.Runner, error) {
