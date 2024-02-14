@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"strconv"
 
 	"reflect"
 
@@ -118,6 +119,21 @@ func (r *RunnerReconciler) reconcileDeployment(ctx context.Context, runnerObj *v
 			if r.Update(ctx, deployment); err != nil {
 				logger.Error(err, "Failed to update Deployment")
 				return &ctrl.Result{}, nil
+			}
+
+			foundConfigMap := &apiv1.ConfigMap{}
+			err := r.Get(ctx, types.NamespacedName{Namespace: runnerObj.Namespace, Name: constants.GetConfigMapName(runnerObj.Name)}, foundConfigMap)
+
+			if err != nil {
+				logger.Error(err, "Unable to get runner configmap")
+				return &ctrl.Result{}, err
+			}
+
+			runnerID, _ := strconv.Atoi(foundConfigMap.Data["runnerID"])
+			err = r.UpdateRunnerDetails(ctx, runnerID, runnerObj)
+
+			if err != nil {
+				return &ctrl.Result{}, err
 			}
 		}
 	}

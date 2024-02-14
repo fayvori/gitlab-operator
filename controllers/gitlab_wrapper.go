@@ -84,26 +84,51 @@ func (r *RunnerReconciler) RegisterNewUserRunner(ctx context.Context, runnerObj 
 
 	// TODO Enable runner for multiple projects
 	for _, enableForProject := range runnerObj.Spec.EnableFor {
-		_, err := client.GetProjectIDByPathWithNamespace(enableForProject)
+		projectID, err := client.GetProjectIDByPathWithNamespace(enableForProject)
 
 		if err != nil {
 			return nil, err
 		}
 
-		// if len(runnerObj.Spec.EnableFor) > 1 {
-		// 	if projectID != *runnerObj.Spec.RunnerOptions.ProjectID {
-		// 		_, err = client.EnableProjectRunner(projectID, &gitlab.EnableProjectRunnerOptions{
-		// 			RunnerID: userRunner.ID,
-		// 		})
+		opt := &gitlab.EnableProjectRunnerOptions{
+			RunnerID: userRunner.ID,
+		}
 
-		// 		if err != nil {
-		// 			return nil, err
-		// 		}
-		// 	}
-		// }
+		// Runner already enabled for this project because we are registered it as single project_type runner
+		if projectID != *runnerObj.Spec.RunnerOptions.ProjectID {
+			if _, err := client.EnableProjectRunner(projectID, opt); err != nil {
+				return nil, err
+			}
+		}
 	}
 
 	return userRunner, nil
+}
+
+func (r *RunnerReconciler) UpdateRunnerDetails(ctx context.Context, rid int, runnerObj *v1alpha1.Runner) error {
+	client, err := r.getGitlabClient(ctx, runnerObj)
+
+	if err != nil {
+		return err
+	}
+
+	runnerSpec := runnerObj.Spec.RunnerOptions
+
+	opt := &gitlab.UpdateRunnerDetailsOptions{
+		Description:    runnerSpec.Description,
+		Paused:         runnerSpec.Paused,
+		TagList:        runnerSpec.TagList,
+		RunUntagged:    runnerSpec.RunUntagged,
+		Locked:         runnerSpec.Locked,
+		AccessLevel:    runnerSpec.AccessLevel,
+		MaximumTimeout: runnerSpec.MaximumTimeout,
+	}
+
+	if err := client.UpdateRunnerDetails(rid, opt); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r *RunnerReconciler) DeleteRunnerById(ctx context.Context, runnerObj *v1alpha1.Runner, runnerId int) error {

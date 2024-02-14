@@ -18,6 +18,7 @@ type GitlabClient interface {
 	RegisterNewUserRunner(opt *gitlab.CreateUserRunnerOptions) (*gitlab.UserRunner, *gitlab.Response, error)
 	DeleteRunnerById(rid int) (*gitlab.Response, error)
 	GetProjectIDByPathWithNamespace(projectPath string) (int, error)
+	UpdateRunnerDetails(rid int, opt *gitlab.UpdateRunnerDetailsOptions) error
 
 	EnableProjectRunner(pid interface{}, opt *gitlab.EnableProjectRunnerOptions) (*gitlab.Runner, error)
 	DisableProjectRunner(pid interface{}, runnerId int) (*gitlab.Response, error)
@@ -44,6 +45,16 @@ func (g *gitlabApi) RegisterNewUserRunner(opt *gitlab.CreateUserRunnerOptions) (
 	}
 
 	return runner, nil, nil
+}
+
+func (g *gitlabApi) UpdateRunnerDetails(rid int, opt *gitlab.UpdateRunnerDetailsOptions) error {
+	_, _, err := g.client.Runners.UpdateRunnerDetails(rid, opt)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (g *gitlabApi) DeleteRunnerById(rid int) (*gitlab.Response, error) {
