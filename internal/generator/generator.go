@@ -81,6 +81,7 @@ type Kubernetes struct {
 	Host                                    string                                  `toml:"host"`
 	BearerTokenOverwriteAllowed             bool                                    `toml:"bearer_token_overwrite_allowed"`
 	Image                                   string                                  `toml:"image"`
+	HelperImage                             string                                  `toml:"helper_image"`
 	Namespace                               string                                  `toml:"namespace"`
 	NamespaceOverwriteAllowed               string                                  `toml:"namespace_overwrite_allowed"`
 	NodeSelectorOverwriteAllowed            string                                  `toml:"node_selector_overwrite_allowed"`
@@ -136,12 +137,11 @@ func (gc *ConfigGenerator) Generate(runnerObj *v1alpha1.Runner, runnerID int, to
 				Cache: Cache{
 					MaxUploadedArchiveSize: 0,
 				},
-				// TODO
 				Kubernetes: Kubernetes{
-					// TODO
-					Host:                                    "replace",
+					Host:                                    "",
 					BearerTokenOverwriteAllowed:             false,
 					Image:                                   "alpine",
+					HelperImage:                             "gitlab/gitlab-runner-helper:alpine-latest-x86_64-bleeding",
 					Namespace:                               runnerObj.Namespace,
 					NamespaceOverwriteAllowed:               "",
 					NodeSelectorOverwriteAllowed:            "",

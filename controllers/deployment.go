@@ -52,6 +52,7 @@ func (r *RunnerReconciler) defineDeployment(runnerObj *v1alpha1.Runner) *appsv1.
 							},
 						},
 					},
+					ServiceAccountName: "gitlab-operator-controller-manager",
 					Volumes: []apiv1.Volume{
 						apiv1.Volume{
 							Name: "config",

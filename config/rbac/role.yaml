@@ -23,6 +23,9 @@ rules:
   - runners/finalizers
   verbs:
   - update
+  - create
+  - update
+  - delete
 - apiGroups:
   - my.domain
   resources:
@@ -31,3 +34,51 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+  - deletecollection
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+  - deletecollection
+  - patch

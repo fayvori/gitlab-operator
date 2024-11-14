@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: gitlab-operator
   name: runner-sample
-  namespace: default
+  namespace: gitlab-operator-system
 spec:
   runnerOptions:
     runnerType: "project_type"
