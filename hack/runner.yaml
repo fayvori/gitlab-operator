@@ -13,12 +13,8 @@ metadata:
 spec:
   runnerOptions:
     runnerType: "project_type"
-    projectID: 38233419
+    projectID: 63011792
     description: "Runner created from crd operator"
     tagList:
       - "linux"
       - "sometag"
-
-  # enableFor:
-  #   - "fayvori1/cicdbasics"
-  #   - "fayvori1/test"
